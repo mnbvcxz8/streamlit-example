@@ -1,9 +1,11 @@
 from openai import OpenAI
 import streamlit as st
+import os
 
 st.title("OpenAI and Streamlit Interaction")
 
-client = OpenAI(api_key = st.secrets["OPENAI_API_KEY"])
+OpenAI.api_key = os.getenv('OPENAI_API_KEY')
+client = OpenAI()
 
 if "openai_model" not in st.session_state:
     st.session_state["openai_model"] = "gpt-3.5-turbo"
@@ -23,6 +25,7 @@ if prompt := st.chat_input("Enter your prompt:"):
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
         full_response = ""
+
         for response in client.chat.completions.create(
                 model=st.session_state["openai_model"],
                 messages=[
